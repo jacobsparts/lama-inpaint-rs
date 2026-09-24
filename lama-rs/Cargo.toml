@@ -1,0 +1,40 @@
+[package]
+name = "lama-inpaint"
+version = "0.2.4"
+edition = "2021"
+description = "Standalone big-lama inpainting inference engine (GPU with CPU fallback)"
+
+[[bin]]
+name = "lama-inpaint"
+path = "src/main.rs"
+
+[features]
+# The default build supports both backends: `--cpu` is pure Rust, the GPU path
+# uses the embedded CUDA fatbins. Building the CUDA feature needs nvcc (set
+# NVCC=/path/to/nvcc if it is not on PATH); it is what makes the toolkit's build
+# helper actually invoke nvcc, and it is default-on so a plain `cargo build`
+# produces the engine people run.
+default = ["cuda"]
+# Compiles cuda/lama.cu and lightgpu's cuda/kernels.cu with nvcc and embeds the
+# two fatbins.
+cuda = []
+
+[dependencies]
+png = "0.17"
+rayon = "1"
+libc = "0.2"
+# The shared safetensors container reader for the weight file, and the batched
+# 2-D Fourier transforms this engine's spectral blocks call (cuda/lama.cu holds
+# the rest of the kernel set; build.rs compiles the two into separate modules).
+lightgpu = { git = "https://github.com/jacobsparts/lightgpu.git" }
+
+[build-dependencies]
+# Compiles this engine's kernel family (cuda/lama.cu) and the toolkit subset it
+# calls (lightgpu's cuda/kernels.cu) into the two fatbins src/cuda.rs embeds.
+lightgpu-build = { git = "https://github.com/jacobsparts/lightgpu.git", package = "lightgpu-build" }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"

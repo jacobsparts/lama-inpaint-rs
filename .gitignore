@@ -1,0 +1,28 @@
+# Build output
+/lama-rs/target/
+/lama-rs/**/*.rs.bk
+__pycache__/
+*.pyc
+
+# Python environment
+/.venv/
+
+# Model weights and their derived blob (downloaded from the release)
+/big-lama.bin
+/big-lama.json
+/lama-rs/big-lama.bin
+/lama-rs/big-lama.json
+/lama-rs/models/
+/models/
+
+# Working prototypes and reference dumps
+/attic/
+
+# The original PyTorch port, kept locally as the reference the Rust engine was
+# verified against; not part of the published repository.
+/inpaint.py
+/lamacore.py
+
+# Not tracked on purpose: this engine depends on lightgpu by git, and the family
+# builds against the toolkit as it stands rather than a frozen revision.
+/lama-rs/Cargo.lock
