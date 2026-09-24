@@ -31,7 +31,7 @@ Two independent backends live in `lama-rs/`:
 
 | engine | file | notes |
 | --- | --- | --- |
-| CUDA | `src/cuda.rs` | in-house SGEMM (`k_sgemm_slab`) over im2col patches plus custom kernels for the rest, with the batched 2-D Fourier transforms (`lg_fft2_r2c`/`lg_fft2_c2r`) and every launch taken from the lightgpu toolkit; 0.40 s for 512x512 on a GTX 1080 |
+| CUDA | `src/cuda.rs` | in-house SGEMM (`k_sgemm_slab`) over im2col patches plus custom kernels for the rest, with the batched 2-D Fourier transforms (`lg_fft2_r2c`/`lg_fft2_c2r`) and the output-layer sigmoid (`lg_sigmoid`) taken from the lightgpu toolkit; 0.40 s for 512x512 on a GTX 1080 |
 | CPU | `src/cpu.rs` | direct convolution, rayon-parallel; authoritative for semantics - every GPU change is diffed against it (max 1/255, commonly 0) |
 
 The binary runs the generator in **three operating modes**:
@@ -170,9 +170,11 @@ the CPU-only engine.
 
 The kernel set is split in two, and `build.rs` compiles each half with its own
 `--entries` list so no unused kernel is embedded: `cuda/lama.cu` holds
-big-lama's own kernels, and the batched 2-D Fourier transforms come from the
-shared [lightgpu](https://github.com/jacobsparts/lightgpu) toolkit (which is
-also where the safetensors reader comes from). The two fatbins are loaded as
+big-lama's own kernels, and the shared
+[lightgpu](https://github.com/jacobsparts/lightgpu) toolkit supplies both the
+batched 2-D Fourier transforms and the final output layer's sigmoid (`lg_sigmoid`
+- this engine's `k_sigmoid` was that kernel exactly, so it is gone; the toolkit
+is also where the safetensors reader comes from). The two fatbins are loaded as
 two modules, and every launch goes through `lightgpu::vm` by kernel name.
 Editing either source triggers a rebuild.
 

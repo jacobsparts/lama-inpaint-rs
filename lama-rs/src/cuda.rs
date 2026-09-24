@@ -1200,9 +1200,16 @@ fn bn_relu_add_inplace(x: &mut DActs, bn: &DBn, skip: Option<&DActs>) -> Result<
 fn sigmoid_inplace(x: &mut DActs) -> Result<(), String> {
     let c = ctx()?;
     let mut aa = Args::new();
+    // The toolkit's `lg_sigmoid` is out-of-place `(x, y, n)`, so in-place is the
+    // same pointer twice. It computes `1/(1+__expf(-x))`, elementwise and
+    // independently, so nothing is read after it is written - the local
+    // `k_sigmoid` this replaces was that arithmetic exactly. The output layer is
+    // the only caller, and its buffer is large (h*w per channel), so the
+    // 1-D grid is over elements, not planes.
+    aa.ptr(x.buf.ptr as u64);
     aa.ptr(x.buf.ptr as u64);
     aa.i64(x.buf.len as i64);
-    c.launch_at(&mut aa, "k_sigmoid", (grid_for(x.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))
+    c.launch_at(&mut aa, "lg_sigmoid", (grid_for(x.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))
 
 }
 

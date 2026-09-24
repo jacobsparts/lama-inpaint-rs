@@ -8,14 +8,16 @@
 //! rather than at build time, so both lists are checked against the source they
 //! are compiled from before nvcc runs.
 
-/// Generic ops from the shared toolkit. big-lama calls exactly one family of
-/// toolkit kernels: the batched 2-D Fourier transforms behind its spectral
-/// blocks (originally an in-tree implementation, lifted into the toolkit when
-/// it turned out to be model-independent). Everything else this engine calls is
-/// specific to big-lama's architecture and lives in `cuda/lama.cu`.
+/// Generic ops from the shared toolkit. big-lama calls the batched 2-D Fourier
+/// transforms behind its spectral blocks (originally an in-tree implementation,
+/// lifted into the toolkit when it turned out to be model-independent), plus
+/// `lg_sigmoid` for the final output layer - this engine's own `k_sigmoid` was
+/// the toolkit's kernel character for character, so it is gone. Everything else
+/// here is specific to big-lama's architecture and lives in `cuda/lama.cu`.
 const TOOLKIT_KERNELS: &[&str] = &[
     "lg_fft2_r2c",
     "lg_fft2_c2r",
+    "lg_sigmoid",
 ];
 
 /// This engine's own kernels, in `cuda/lama.cu`.
@@ -23,7 +25,6 @@ const PROJECT_KERNELS: &[&str] = &[
     "k_im2col",
     "k_conv_transpose",
     "k_bn_relu",
-    "k_sigmoid",
     "k_add_inplace",
     "k_scale",
     "k_reflect_pad",

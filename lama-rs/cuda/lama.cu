@@ -100,12 +100,6 @@ extern "C" __global__ void k_bn_relu(float* __restrict__ x, const float* __restr
     x[idx] = v > 0.f ? v : 0.f;
 }
 
-extern "C" __global__ void k_sigmoid(float* __restrict__ x, long long n)
-{
-    long long i = (long long)blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < n) { x[i] = 1.f / (1.f + __expf(-x[i])); }
-}
-
 extern "C" __global__ void k_add_inplace(float* __restrict__ a, const float* __restrict__ b, long long n)
 {
     long long i = (long long)blockIdx.x * blockDim.x + threadIdx.x;
