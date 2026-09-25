@@ -32,7 +32,7 @@ Two independent backends live in `lama-rs/`:
 | engine | file | notes |
 | --- | --- | --- |
 | CUDA | `src/cuda.rs` | in-house SGEMM (`k_sgemm_slab`) over im2col patches plus custom kernels for the rest, with the batched 2-D Fourier transforms (`lg_fft2_r2c`/`lg_fft2_c2r`) and the output-layer sigmoid (`lg_sigmoid`) taken from the lightgpu toolkit; 0.40 s for 512x512 on a GTX 1080 |
-| CPU | `src/cpu.rs` | direct convolution, rayon-parallel; authoritative for semantics - every GPU change is diffed against it (max 1/255, commonly 0) |
+| CPU | `src/cpu.rs` | direct convolution, rayon-parallel - the path taken when there is no GPU, held to the same performance standard as the CUDA one; the two are kept in step at max 1/255, commonly 0 |
 
 The binary runs the generator in **three operating modes**:
 

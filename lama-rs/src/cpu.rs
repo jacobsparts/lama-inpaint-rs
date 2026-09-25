@@ -1,6 +1,7 @@
 //! CPU forward pass: direct convolutions over NCHW planes.
 //!
-//! This is the fallback path (and the correctness reference for the GPU path).
+//! This is the CPU backend: the path taken when there is no GPU, kept in step
+//! with the CUDA path rather than treated as a slower annexe.
 //! It runs one layer at a time over `Vec<f32>` buffers, parallelised with
 //! rayon across output channels / rows.  No BLAS is required.
 
