@@ -1219,7 +1219,7 @@ fn add_inplace(a: &mut DActs, b: &DActs) -> Result<(), String> {
     aa.ptr(a.buf.ptr as u64);
     aa.ptr(b.buf.ptr as u64);
     aa.i64(a.buf.len as i64);
-    c.launch_at(&mut aa, "k_add_inplace", (grid_for(a.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))
+    c.launch_at(&mut aa, "lg_add_inplace", (grid_for(a.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))
 
 }
 
@@ -1265,7 +1265,7 @@ fn concat_acts(a: &DActs, g: &DActs) -> Result<DActs, String> {
         aa.ptr(src.buf.ptr as u64);
         aa.ptr((unsafe { (out.ptr as *mut u8).add(off) as *mut c_void }) as u64);
         aa.i64(src.buf.len as i64);
-        c.launch_at(&mut aa, "k_copy_plane", (grid_for(src.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))?;
+        c.launch_at(&mut aa, "lg_copy", (grid_for(src.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))?;
         off += src.buf.len * 4;
     }
     Ok(DActs { buf: out, c: a.c + g.c, h: a.h, w: a.w })
@@ -1440,7 +1440,7 @@ fn copy_acts(src: &DActs) -> Result<DActs, String> {
     aa.ptr(src.buf.ptr as u64);
     aa.ptr(out.ptr as u64);
     aa.i64(src.buf.len as i64);
-    c.launch_at(&mut aa, "k_copy_plane", (grid_for(src.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))?;
+    c.launch_at(&mut aa, "lg_copy", (grid_for(src.buf.len, BLOCK), 1, 1), (BLOCK, 1, 1))?;
     Ok(DActs { buf: out, c: src.c, h: src.h, w: src.w })
 }
 

@@ -100,17 +100,24 @@ extern "C" __global__ void k_bn_relu(float* __restrict__ x, const float* __restr
     x[idx] = v > 0.f ? v : 0.f;
 }
 
-extern "C" __global__ void k_add_inplace(float* __restrict__ a, const float* __restrict__ b, long long n)
-{
-    long long i = (long long)blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < n) a[i] += b[i];
-}
-
-extern "C" __global__ void k_scale(float* __restrict__ x, long long n, float s)
-{
-    long long i = (long long)blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < n) x[i] *= s;
-}
+// `k_add_inplace` and `k_copy_plane` used to be here. Both are the toolkit's: an
+// in-place accumulate over a plane is `lg_add_inplace` (identical body), and a
+// plain copy is `lg_copy` (identical body under different pointer names). A
+// duplicate of a shared kernel is not an optimisation waiting to happen, it is a
+// second definition of one operation - the thing the shared set exists to avoid.
+//
+// The one thing to check when moving a call site across is the LENGTH WIDTH:
+// these two took a `long long`, where the toolkit's take `int` and `long`. The
+// kernels read the length from the argument slot it sits in, so passing it at the
+// wrong width is a wrong number rather than an error - see CONVENTIONS.md section
+// 1 in the toolkit.
+//
+// `k_scale` was also here and has been deleted rather than promoted: it had no
+// call site at all, and it was not the toolkit's `lg_scale` anyway (that one is
+// out-of-place, `y = x * s`, indexed by a separate output pointer; this one was
+// in-place `x *= s` with the scalar after the length). If a scale is needed, the
+// toolkit op is the one to call - or `lg_channel_affine`'s null-shift case, which
+// is in-place and per-channel.
 
 // ReflectionPad2d over [c][h][w] -> [c][h+2p][w+2p].
 extern "C" __global__ void k_reflect_pad(const float* __restrict__ src, float* __restrict__ dst,
@@ -148,14 +155,6 @@ extern "C" __global__ void k_avgpool2x2(const float* __restrict__ src, float* __
     float cc = p[(long long)(2 * y + 1) * w + 2 * x];
     float d = p[(long long)(2 * y + 1) * w + 2 * x + 1];
     dst[idx] = (a + b + cc + d) * 0.25f;
-}
-
-// Copy one plane; used to build the concatenated local|global tensor and to
-// gather the final 3-channel output.
-extern "C" __global__ void k_copy_plane(const float* __restrict__ src, float* __restrict__ dst, long long n)
-{
-    long long i = (long long)blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < n) dst[i] = src[i];
 }
 
 // The R2C transform writes an interleaved complex plane per channel; the

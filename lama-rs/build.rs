@@ -18,18 +18,24 @@ const TOOLKIT_KERNELS: &[&str] = &[
     "lg_fft2_r2c",
     "lg_fft2_c2r",
     "lg_sigmoid",
+    // Promoted from this engine's own file: an exact duplicate of an in-place
+    // plane accumulate, and of a plane copy. See the note over PROJECT_KERNELS.
+    "lg_add_inplace",
+    "lg_copy",
 ];
 
 /// This engine's own kernels, in `cuda/lama.cu`.
+///
+/// `k_add_inplace` and `k_copy_plane` are no longer here: they were exact
+/// duplicates of the toolkit's `lg_add_inplace` and `lg_copy` and now live in
+/// `TOOLKIT_KERNELS` above instead. `k_scale` is gone entirely - it was listed
+/// here but never launched, so it only ever cost fatbin bytes.
 const PROJECT_KERNELS: &[&str] = &[
     "k_im2col",
     "k_conv_transpose",
     "k_bn_relu",
-    "k_add_inplace",
-    "k_scale",
     "k_reflect_pad",
     "k_avgpool2x2",
-    "k_copy_plane",
     "k_spec_pack",
     "k_spec_unpack",
     "k_convt_col",
