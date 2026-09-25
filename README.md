@@ -16,8 +16,9 @@ capability 6.1 or newer, while the CPU engine runs anywhere Rust does.
 
 One of the [lightgpu inference engines](https://github.com/jacobsparts/lightgpu).
 The family also includes [rmbg-rs](https://github.com/jacobsparts/rmbg-rs),
-[locate-anything-rs](https://github.com/jacobsparts/locate-anything-rs) and
-[realesrgan-rs](https://github.com/jacobsparts/realesrgan-rs); every engine pulls
+[locate-anything-rs](https://github.com/jacobsparts/locate-anything-rs),
+[realesrgan-rs](https://github.com/jacobsparts/realesrgan-rs) and
+[nafnet-rs](https://github.com/jacobsparts/nafnet-rs); every engine pulls
 the [lightgpu toolkit](https://github.com/jacobsparts/lightgpu) in as a Git
 dependency. Here it supplies the `.safetensors` weight store, the `.cu` build
 step, the CUDA context and launch layer, and the 2-D Fourier transforms; this
