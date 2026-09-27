@@ -65,9 +65,15 @@ into one directory and run:
 
 Both read the same weight file and produce the same output on `--cpu`.
 
-```
+```sh
+chmod +x lama-inpaint-linux-x86_64
+mv lama-inpaint-linux-x86_64 lama-inpaint     # the name used below
 ./lama-inpaint --image photo.png --mask mask.png --output out.png
 ```
+
+The `chmod` is not decoration: a download does not carry the executable bit
+through, and a binary that has lost it fails with `Permission denied` before it
+can print anything.
 
 The weights are found next to the executable by default, so no paths are
 needed. `--mask` is a PNG in which any non-black pixel marks a hole; the output
