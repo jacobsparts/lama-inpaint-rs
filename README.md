@@ -15,19 +15,20 @@ This is a Linux x86-64 release; the GPU path needs an NVIDIA GPU of compute
 capability 6.1 or newer, while the CPU engine runs anywhere Rust does.
 
 One of the [lightgpu inference engines](https://github.com/jacobsparts/lightgpu).
-The family also includes [rmbg-rs](https://github.com/jacobsparts/rmbg-rs),
-[locate-anything-rs](https://github.com/jacobsparts/locate-anything-rs),
-[realesrgan-rs](https://github.com/jacobsparts/realesrgan-rs),
-[nafnet-rs](https://github.com/jacobsparts/nafnet-rs),
+The family also includes [nafnet-rs](https://github.com/jacobsparts/nafnet-rs),
+[rmbg-rs](https://github.com/jacobsparts/rmbg-rs),
 [maxim-rs](https://github.com/jacobsparts/maxim-rs),
-[scunet-rs](https://github.com/jacobsparts/scunet-rs) and
-[ifan-rs](https://github.com/jacobsparts/ifan-rs); every engine pulls
-the [lightgpu toolkit](https://github.com/jacobsparts/lightgpu) in as a Git
-dependency. Here it supplies the `.safetensors` weight store, the `.cu` build
-step, the CUDA context and launch layer, and the 2-D Fourier transforms; this
-engine brings its own kernel image for the rest.
+[scunet-rs](https://github.com/jacobsparts/scunet-rs),
+[swin2sr-rs](https://github.com/jacobsparts/swin2sr-rs),
+[ifan-rs](https://github.com/jacobsparts/ifan-rs),
+[realesrgan-rs](https://github.com/jacobsparts/realesrgan-rs),
+[locate-anything-rs](https://github.com/jacobsparts/locate-anything-rs) and
+[nightenh-rs](https://github.com/jacobsparts/nightenh-rs), all built on the
+[lightgpu toolkit](https://github.com/jacobsparts/lightgpu);
+[adaptive-enhance](https://github.com/jacobsparts/adaptive-enhance) is a CPU-only
+toolset that does not use it, and
 [pixeldeck](https://github.com/jacobsparts/pixeldeck) is a local web app for
-cleaning up product photos that drives all of these engines.
+cleaning up product photos that drives them all.
 
 ![Demo: original, masked with a black hole, and inpainted result](docs/demo-strip.png)
 
