@@ -18,8 +18,10 @@ One of the [lightgpu inference engines](https://github.com/jacobsparts/lightgpu)
 The family also includes [rmbg-rs](https://github.com/jacobsparts/rmbg-rs),
 [locate-anything-rs](https://github.com/jacobsparts/locate-anything-rs),
 [realesrgan-rs](https://github.com/jacobsparts/realesrgan-rs),
-[nafnet-rs](https://github.com/jacobsparts/nafnet-rs) and
-[maxim-rs](https://github.com/jacobsparts/maxim-rs); every engine pulls
+[nafnet-rs](https://github.com/jacobsparts/nafnet-rs),
+[maxim-rs](https://github.com/jacobsparts/maxim-rs),
+[scunet-rs](https://github.com/jacobsparts/scunet-rs) and
+[ifan-rs](https://github.com/jacobsparts/ifan-rs); every engine pulls
 the [lightgpu toolkit](https://github.com/jacobsparts/lightgpu) in as a Git
 dependency. Here it supplies the `.safetensors` weight store, the `.cu` build
 step, the CUDA context and launch layer, and the 2-D Fourier transforms; this
